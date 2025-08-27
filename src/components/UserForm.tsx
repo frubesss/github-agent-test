@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { useForm } from '@tanstack/react-form';
 import { UserDetails } from '../types';
 import './UserForm.css';
 
@@ -13,61 +14,30 @@ const UserForm: React.FC<UserFormProps> = ({
   onLoadTestCustomer, 
   testCustomers = [] 
 }) => {
-  const [formData, setFormData] = useState<UserDetails>({
-    firstName: '',
-    lastName: '',
-    dateOfBirth: '',
-    employmentStatus: 'Full time',
-    annualIncome: 0,
-    houseNumber: '',
-    postcode: ''
+  const form = useForm({
+    defaultValues: {
+      firstName: '',
+      lastName: '',
+      dateOfBirth: '',
+      employmentStatus: 'Full time' as UserDetails['employmentStatus'],
+      annualIncome: 0,
+      houseNumber: '',
+      postcode: ''
+    },
+    onSubmit: async ({ value }) => {
+      onSubmit(value);
+    },
   });
 
-  const [errors, setErrors] = useState<Record<string, string>>({});
-
-  const validateForm = (): boolean => {
-    const newErrors: Record<string, string> = {};
-
-    if (!formData.firstName.trim()) newErrors.firstName = 'First name is required';
-    if (!formData.lastName.trim()) newErrors.lastName = 'Last name is required';
-    if (!formData.dateOfBirth) newErrors.dateOfBirth = 'Date of birth is required';
-    if (formData.annualIncome <= 0) newErrors.annualIncome = 'Annual income must be greater than 0';
-    if (!formData.houseNumber.trim()) newErrors.houseNumber = 'House number is required';
-    if (!formData.postcode.trim()) newErrors.postcode = 'Postcode is required';
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (validateForm()) {
-      onSubmit(formData);
-    }
-  };
-
-  const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: name === 'annualIncome' ? Number(value) : value
-    }));
-    
-    // Clear error when user starts typing
-    if (errors[name]) {
-      setErrors(prev => {
-        const newErrors = { ...prev };
-        delete newErrors[name];
-        return newErrors;
-      });
-    }
-  };
-
   const handleLoadTestCustomer = (customer: UserDetails) => {
-    setFormData(customer);
-    setErrors({});
+    form.setFieldValue('firstName', customer.firstName);
+    form.setFieldValue('lastName', customer.lastName);
+    form.setFieldValue('dateOfBirth', customer.dateOfBirth);
+    form.setFieldValue('employmentStatus', customer.employmentStatus);
+    form.setFieldValue('annualIncome', customer.annualIncome);
+    form.setFieldValue('houseNumber', customer.houseNumber);
+    form.setFieldValue('postcode', customer.postcode);
+    
     if (onLoadTestCustomer) {
       onLoadTestCustomer(customer);
     }
@@ -96,106 +66,208 @@ const UserForm: React.FC<UserFormProps> = ({
         </div>
       )}
 
-      <form onSubmit={handleSubmit} className="form">
+      <form 
+        onSubmit={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          form.handleSubmit();
+        }} 
+        className="form"
+      >
         <div className="form-row">
-          <div className="form-group">
-            <label htmlFor="firstName">First Name *</label>
-            <input
-              type="text"
-              id="firstName"
-              name="firstName"
-              value={formData.firstName}
-              onChange={handleInputChange}
-              className={errors.firstName ? 'error' : ''}
-            />
-            {errors.firstName && <span className="error-message">{errors.firstName}</span>}
-          </div>
-
-          <div className="form-group">
-            <label htmlFor="lastName">Last Name *</label>
-            <input
-              type="text"
-              id="lastName"
-              name="lastName"
-              value={formData.lastName}
-              onChange={handleInputChange}
-              className={errors.lastName ? 'error' : ''}
-            />
-            {errors.lastName && <span className="error-message">{errors.lastName}</span>}
-          </div>
-        </div>
-
-        <div className="form-group">
-          <label htmlFor="dateOfBirth">Date of Birth *</label>
-          <input
-            type="date"
-            id="dateOfBirth"
-            name="dateOfBirth"
-            value={formData.dateOfBirth}
-            onChange={handleInputChange}
-            className={errors.dateOfBirth ? 'error' : ''}
+          <form.Field
+            name="firstName"
+            validators={{
+              onSubmit: ({ value }) =>
+                !value || !value.trim() ? 'First name is required' : undefined,
+              onChange: ({ value, fieldApi }) => {
+                // Clear error if the field was touched and now has value
+                if (fieldApi.state.meta.errors.length > 0 && value && value.trim()) {
+                  return undefined;
+                }
+                return;
+              },
+            }}
+            children={(field) => (
+              <div className="form-group">
+                <label htmlFor={field.name}>First Name *</label>
+                <input
+                  type="text"
+                  id={field.name}
+                  name={field.name}
+                  value={field.state.value}
+                  onBlur={field.handleBlur}
+                  onChange={(e) => field.handleChange(e.target.value)}
+                  className={field.state.meta.errors.length ? 'error' : ''}
+                />
+                {field.state.meta.errors.length > 0 && (
+                  <span className="error-message">{field.state.meta.errors[0]}</span>
+                )}
+              </div>
+            )}
           />
-          {errors.dateOfBirth && <span className="error-message">{errors.dateOfBirth}</span>}
-        </div>
 
-        <div className="form-group">
-          <label htmlFor="employmentStatus">Employment Status *</label>
-          <select
-            id="employmentStatus"
-            name="employmentStatus"
-            value={formData.employmentStatus}
-            onChange={handleInputChange}
-          >
-            <option value="Full time">Full time</option>
-            <option value="Part time">Part time</option>
-            <option value="Student">Student</option>
-          </select>
-        </div>
-
-        <div className="form-group">
-          <label htmlFor="annualIncome">Annual Income (£) *</label>
-          <input
-            type="number"
-            id="annualIncome"
-            name="annualIncome"
-            value={formData.annualIncome || ''}
-            onChange={handleInputChange}
-            min="0"
-            step="1000"
-            className={errors.annualIncome ? 'error' : ''}
+          <form.Field
+            name="lastName"
+            validators={{
+              onSubmit: ({ value }) =>
+                !value || !value.trim() ? 'Last name is required' : undefined,
+              onChange: ({ value, fieldApi }) => {
+                // Clear error if the field was touched and now has value
+                if (fieldApi.state.meta.errors.length > 0 && value && value.trim()) {
+                  return undefined;
+                }
+                return;
+              },
+            }}
+            children={(field) => (
+              <div className="form-group">
+                <label htmlFor={field.name}>Last Name *</label>
+                <input
+                  type="text"
+                  id={field.name}
+                  name={field.name}
+                  value={field.state.value}
+                  onBlur={field.handleBlur}
+                  onChange={(e) => field.handleChange(e.target.value)}
+                  className={field.state.meta.errors.length ? 'error' : ''}
+                />
+                {field.state.meta.errors.length > 0 && (
+                  <span className="error-message">{field.state.meta.errors[0]}</span>
+                )}
+              </div>
+            )}
           />
-          {errors.annualIncome && <span className="error-message">{errors.annualIncome}</span>}
         </div>
+
+        <form.Field
+          name="dateOfBirth"
+          validators={{
+            onSubmit: ({ value }) =>
+              !value ? 'Date of birth is required' : undefined,
+          }}
+          children={(field) => (
+            <div className="form-group">
+              <label htmlFor={field.name}>Date of Birth *</label>
+              <input
+                type="date"
+                id={field.name}
+                name={field.name}
+                value={field.state.value}
+                onBlur={field.handleBlur}
+                onChange={(e) => field.handleChange(e.target.value)}
+                className={field.state.meta.errors.length ? 'error' : ''}
+              />
+              {field.state.meta.errors.length > 0 && (
+                <span className="error-message">{field.state.meta.errors[0]}</span>
+              )}
+            </div>
+          )}
+        />
+
+        <form.Field
+          name="employmentStatus"
+          children={(field) => (
+            <div className="form-group">
+              <label htmlFor={field.name}>Employment Status *</label>
+              <select
+                id={field.name}
+                name={field.name}
+                value={field.state.value}
+                onBlur={field.handleBlur}
+                onChange={(e) => field.handleChange(e.target.value as UserDetails['employmentStatus'])}
+              >
+                <option value="Full time">Full time</option>
+                <option value="Part time">Part time</option>
+                <option value="Student">Student</option>
+              </select>
+            </div>
+          )}
+        />
+
+        <form.Field
+          name="annualIncome"
+          validators={{
+            onSubmit: ({ value }) =>
+              value <= 0 ? 'Annual income must be greater than 0' : undefined,
+          }}
+          children={(field) => (
+            <div className="form-group">
+              <label htmlFor={field.name}>Annual Income (£) *</label>
+              <input
+                type="number"
+                id={field.name}
+                name={field.name}
+                value={field.state.value || ''}
+                onBlur={field.handleBlur}
+                onChange={(e) => field.handleChange(Number(e.target.value))}
+                min="0"
+                step="1000"
+                className={field.state.meta.errors.length ? 'error' : ''}
+              />
+              {field.state.meta.errors.length > 0 && (
+                <span className="error-message">{field.state.meta.errors[0]}</span>
+              )}
+            </div>
+          )}
+        />
 
         <div className="form-row">
-          <div className="form-group">
-            <label htmlFor="houseNumber">House Number *</label>
-            <input
-              type="text"
-              id="houseNumber"
-              name="houseNumber"
-              value={formData.houseNumber}
-              onChange={handleInputChange}
-              className={errors.houseNumber ? 'error' : ''}
-            />
-            {errors.houseNumber && <span className="error-message">{errors.houseNumber}</span>}
-          </div>
+          <form.Field
+            name="houseNumber"
+            validators={{
+              onSubmit: ({ value }) =>
+                !value || !value.trim() ? 'House number is required' : undefined,
+            }}
+            children={(field) => (
+              <div className="form-group">
+                <label htmlFor={field.name}>House Number *</label>
+                <input
+                  type="text"
+                  id={field.name}
+                  name={field.name}
+                  value={field.state.value}
+                  onBlur={field.handleBlur}
+                  onChange={(e) => field.handleChange(e.target.value)}
+                  className={field.state.meta.errors.length ? 'error' : ''}
+                />
+                {field.state.meta.errors.length > 0 && (
+                  <span className="error-message">{field.state.meta.errors[0]}</span>
+                )}
+              </div>
+            )}
+          />
 
-          <div className="form-group">
-            <label htmlFor="postcode">Postcode *</label>
-            <input
-              type="text"
-              id="postcode"
-              name="postcode"
-              value={formData.postcode}
-              onChange={handleInputChange}
-              className={errors.postcode ? 'error' : ''}
-            />
-            {errors.postcode && <span className="error-message">{errors.postcode}</span>}
-          </div>
+          <form.Field
+            name="postcode"
+            validators={{
+              onSubmit: ({ value }) =>
+                !value || !value.trim() ? 'Postcode is required' : undefined,
+            }}
+            children={(field) => (
+              <div className="form-group">
+                <label htmlFor={field.name}>Postcode *</label>
+                <input
+                  type="text"
+                  id={field.name}
+                  name={field.name}
+                  value={field.state.value}
+                  onBlur={field.handleBlur}
+                  onChange={(e) => field.handleChange(e.target.value)}
+                  className={field.state.meta.errors.length ? 'error' : ''}
+                />
+                {field.state.meta.errors.length > 0 && (
+                  <span className="error-message">{field.state.meta.errors[0]}</span>
+                )}
+              </div>
+            )}
+          />
         </div>
 
-        <button type="submit" className="submit-btn">
+        <button 
+          type="submit" 
+          className="submit-btn"
+        >
           Find My Credit Cards
         </button>
       </form>

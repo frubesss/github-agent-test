@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, act } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import UserForm from '../components/UserForm';
 import { testCustomers } from '../data/testCustomers';
@@ -57,10 +57,12 @@ describe('UserForm', () => {
     expect(screen.getByDisplayValue('34000')).toBeInTheDocument();
   });
 
-  test('shows validation errors for empty required fields', () => {
+  test('shows validation errors for empty required fields', async () => {
     render(<UserForm onSubmit={mockOnSubmit} />);
     
-    fireEvent.click(screen.getByRole('button', { name: /find my credit cards/i }));
+    await act(async () => {
+      fireEvent.click(screen.getByRole('button', { name: /find my credit cards/i }));
+    });
     
     expect(screen.getByText('First name is required')).toBeInTheDocument();
     expect(screen.getByText('Last name is required')).toBeInTheDocument();
@@ -72,7 +74,7 @@ describe('UserForm', () => {
     expect(mockOnSubmit).not.toHaveBeenCalled();
   });
 
-  test('submits form with valid data', () => {
+  test('submits form with valid data', async () => {
     render(<UserForm onSubmit={mockOnSubmit} />);
     
     fireEvent.change(screen.getByLabelText(/first name/i), { target: { value: 'John' } });
@@ -83,7 +85,9 @@ describe('UserForm', () => {
     fireEvent.change(screen.getByLabelText(/house number/i), { target: { value: '123' } });
     fireEvent.change(screen.getByLabelText(/postcode/i), { target: { value: 'AB12 3CD' } });
     
-    fireEvent.click(screen.getByRole('button', { name: /find my credit cards/i }));
+    await act(async () => {
+      fireEvent.click(screen.getByRole('button', { name: /find my credit cards/i }));
+    });
     
     expect(mockOnSubmit).toHaveBeenCalledWith({
       firstName: 'John',
@@ -96,15 +100,19 @@ describe('UserForm', () => {
     });
   });
 
-  test('clears error when user starts typing in field with error', () => {
+  test('clears error when user starts typing in field with error', async () => {
     render(<UserForm onSubmit={mockOnSubmit} />);
     
     // Trigger validation
-    fireEvent.click(screen.getByRole('button', { name: /find my credit cards/i }));
+    await act(async () => {
+      fireEvent.click(screen.getByRole('button', { name: /find my credit cards/i }));
+    });
     expect(screen.getByText('First name is required')).toBeInTheDocument();
     
     // Start typing in first name field
-    fireEvent.change(screen.getByLabelText(/first name/i), { target: { value: 'J' } });
+    await act(async () => {
+      fireEvent.change(screen.getByLabelText(/first name/i), { target: { value: 'J' } });
+    });
     
     // Error should be cleared
     expect(screen.queryByText('First name is required')).not.toBeInTheDocument();
