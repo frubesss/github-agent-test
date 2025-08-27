@@ -12,7 +12,7 @@ A React TypeScript application that helps users find the perfect credit card for
 
 ## GitHub Pages Deployment
 
-This application is configured to automatically deploy to GitHub Pages. The website will be available at: https://frubesss.github.io/craig-test
+This application is configured to automatically deploy to GitHub Pages. The website will be available at: https://frubesss.github.io/github-agent-test
 
 ### Setup Instructions
 
@@ -32,8 +32,8 @@ The deployment workflow builds the React app and publishes it to GitHub Pages us
 
 1. Clone the repository
 ```bash
-git clone https://github.com/frubesss/craig-test.git
-cd craig-test
+git clone https://github.com/frubesss/github-agent-test
+cd github-agent-test
 ```
 
 2. Install dependencies
