@@ -92,7 +92,8 @@ describe('UserForm', () => {
       employmentStatus: 'Full time',
       annualIncome: 25000,
       houseNumber: '123',
-      postcode: 'AB12 3CD'
+      postcode: 'AB12 3CD',
+      avatar: 'https://ui-avatars.com/api/?name=John+Doe&size=100&background=6366f1&color=white&bold=true&format=png'
     });
   });
 

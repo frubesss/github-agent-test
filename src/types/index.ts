@@ -7,6 +7,7 @@ export interface UserDetails {
   annualIncome: number;
   houseNumber: string;
   postcode: string;
+  avatar?: string; // Optional avatar URL
 }
 
 // Credit card types

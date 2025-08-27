@@ -1,4 +1,5 @@
 import { UserDetails } from '../types';
+import { generateAvatarUrl } from '../utils/avatarUtils';
 
 // Test customer data from the problem statement
 export const testCustomers: UserDetails[] = [
@@ -9,7 +10,8 @@ export const testCustomers: UserDetails[] = [
     employmentStatus: 'Full time',
     annualIncome: 34000,
     houseNumber: '700',
-    postcode: 'BS14 9PR'
+    postcode: 'BS14 9PR',
+    avatar: generateAvatarUrl('Ollie', 'Murphree')
   },
   {
     firstName: 'Elizabeth',
@@ -18,7 +20,8 @@ export const testCustomers: UserDetails[] = [
     employmentStatus: 'Student',
     annualIncome: 17000,
     houseNumber: '177',
-    postcode: 'PH12 8UW'
+    postcode: 'PH12 8UW',
+    avatar: generateAvatarUrl('Elizabeth', 'Edmundson')
   },
   {
     firstName: 'Trevor',
@@ -27,6 +30,7 @@ export const testCustomers: UserDetails[] = [
     employmentStatus: 'Part time',
     annualIncome: 15000,
     houseNumber: '343',
-    postcode: 'TS25 2NF'
+    postcode: 'TS25 2NF',
+    avatar: generateAvatarUrl('Trevor', 'Rieck')
   }
 ];

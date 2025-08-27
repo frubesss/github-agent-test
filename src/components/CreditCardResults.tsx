@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { CreditCardWithRules, UserDetails } from '../types';
 import { calculateTotalCredit, formatCurrency } from '../utils/cardUtils';
 import CreditCard from './CreditCard';
+import Avatar from './Avatar';
 import './CreditCardResults.css';
 
 interface CreditCardResultsProps {
@@ -47,11 +48,21 @@ const CreditCardResults: React.FC<CreditCardResultsProps> = ({
     return (
       <div className="results-container">
         <div className="no-results">
-          <h2>No Eligible Cards Found</h2>
-          <p>
-            Unfortunately, {user.firstName} {user.lastName}, you don't meet the 
-            eligibility criteria for any of our current credit cards.
-          </p>
+          <div className="user-greeting">
+            <Avatar 
+              firstName={user.firstName} 
+              lastName={user.lastName}
+              src={user.avatar}
+              size="large"
+            />
+            <div>
+              <h2>No Eligible Cards Found</h2>
+              <p>
+                Unfortunately, {user.firstName} {user.lastName}, you don't meet the 
+                eligibility criteria for any of our current credit cards.
+              </p>
+            </div>
+          </div>
           <button onClick={onStartOver} className="start-over-btn">
             Try Different Details
           </button>
@@ -63,12 +74,22 @@ const CreditCardResults: React.FC<CreditCardResultsProps> = ({
   return (
     <div className="results-container">
       <div className="results-header">
-        <h2>Your Eligible Credit Cards</h2>
-        <p>
-          Hello {user.firstName} {user.lastName}! Based on your details, 
-          you're eligible for {eligibleCards.length} credit card
-          {eligibleCards.length === 1 ? '' : 's'}.
-        </p>
+        <div className="user-greeting">
+          <Avatar 
+            firstName={user.firstName} 
+            lastName={user.lastName}
+            src={user.avatar}
+            size="large"
+          />
+          <div>
+            <h2>Your Eligible Credit Cards</h2>
+            <p>
+              Hello {user.firstName} {user.lastName}! Based on your details, 
+              you're eligible for {eligibleCards.length} credit card
+              {eligibleCards.length === 1 ? '' : 's'}.
+            </p>
+          </div>
+        </div>
         <button onClick={onStartOver} className="start-over-btn secondary">
           Start Over
         </button>

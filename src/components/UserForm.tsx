@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { UserDetails } from '../types';
+import { generateAvatarUrl } from '../utils/avatarUtils';
+import Avatar from './Avatar';
 import './UserForm.css';
 
 interface UserFormProps {
@@ -42,7 +44,12 @@ const UserForm: React.FC<UserFormProps> = ({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (validateForm()) {
-      onSubmit(formData);
+      // Generate avatar if not provided
+      const userWithAvatar = {
+        ...formData,
+        avatar: formData.avatar || generateAvatarUrl(formData.firstName, formData.lastName)
+      };
+      onSubmit(userWithAvatar);
     }
   };
 
@@ -66,10 +73,16 @@ const UserForm: React.FC<UserFormProps> = ({
   };
 
   const handleLoadTestCustomer = (customer: UserDetails) => {
-    setFormData(customer);
+    // Generate avatar if not provided
+    const customerWithAvatar = {
+      ...customer,
+      avatar: customer.avatar || generateAvatarUrl(customer.firstName, customer.lastName)
+    };
+    
+    setFormData(customerWithAvatar);
     setErrors({});
     if (onLoadTestCustomer) {
-      onLoadTestCustomer(customer);
+      onLoadTestCustomer(customerWithAvatar);
     }
   };
 
@@ -89,7 +102,13 @@ const UserForm: React.FC<UserFormProps> = ({
                 onClick={() => handleLoadTestCustomer(customer)}
                 className="test-customer-btn"
               >
-                {customer.firstName} {customer.lastName}
+                <Avatar 
+                  firstName={customer.firstName} 
+                  lastName={customer.lastName}
+                  src={customer.avatar}
+                  size="small"
+                />
+                <span>{customer.firstName} {customer.lastName}</span>
               </button>
             ))}
           </div>
