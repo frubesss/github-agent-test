@@ -1,6 +1,14 @@
-# Getting Started with Create React App
+# Credit Cards Application
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A React TypeScript application that helps users find the perfect credit card for their financial needs. Users can input their financial details and get personalized credit card recommendations based on eligibility criteria.
+
+## Features
+
+- **User-friendly interface**: Simple form to input financial details
+- **Smart matching**: Algorithm to match users with eligible credit cards
+- **Test data included**: Pre-loaded test customers for demonstration
+- **Responsive design**: Works on desktop and mobile devices
+- **Real-time results**: Instant credit card recommendations
 
 ## GitHub Pages Deployment
 
@@ -13,6 +21,32 @@ This application is configured to automatically deploy to GitHub Pages. The webs
 3. **Manual Deployment**: You can also trigger deployment from the Actions tab
 
 The deployment workflow builds the React app and publishes it to GitHub Pages using the latest GitHub Actions.
+
+## Getting Started
+
+### Prerequisites
+- Node.js (version 18 or higher)
+- npm or yarn package manager
+
+### Installation
+
+1. Clone the repository
+```bash
+git clone https://github.com/frubesss/craig-test.git
+cd craig-test
+```
+
+2. Install dependencies
+```bash
+npm install
+```
+
+3. Start the development server
+```bash
+npm start
+```
+
+The application will open in your browser at [http://localhost:3000](http://localhost:3000).
 
 ## Available Scripts
 
@@ -51,8 +85,33 @@ Instead, it will copy all the configuration files and the transitive dependencie
 
 You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
 
+## Usage
+
+1. **Enter your details**: Fill out the form with your financial information including:
+   - Annual income
+   - Credit score
+   - Employment status
+   - Other relevant financial details
+
+2. **Get recommendations**: The application will analyze your information and show eligible credit cards
+
+3. **Review options**: Browse through the recommended credit cards with their features and benefits
+
+4. **Start over**: Use the "Start Over" button to check eligibility for different scenarios
+
+### Test Data
+The application includes pre-loaded test customer data for demonstration purposes. You can select from these test profiles to quickly see how the application works.
+
+## Technical Details
+
+This application is built with:
+- **React 19** - Frontend framework
+- **TypeScript** - Type safety and better development experience
+- **Create React App** - Build toolchain and development server
+- **GitHub Actions** - Automated deployment to GitHub Pages
+
 ## Learn More
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+- [React Documentation](https://reactjs.org/) - Learn about React
+- [TypeScript Documentation](https://www.typescriptlang.org/) - Learn about TypeScript
+- [GitHub Pages](https://pages.github.com/) - Learn about GitHub Pages deployment
