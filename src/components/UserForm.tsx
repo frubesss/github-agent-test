@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { UserDetails } from '../types';
+import { isDevToolsEnabled } from '../utils/urlUtils';
 import './UserForm.css';
 
 interface UserFormProps {
@@ -77,7 +78,7 @@ const UserForm: React.FC<UserFormProps> = ({
     <div className="user-form">
       <h2>Enter Your Details</h2>
       
-      {testCustomers.length > 0 && (
+      {testCustomers.length > 0 && isDevToolsEnabled() && (
         <div className="test-customers">
           <h3>Quick Test</h3>
           <p>Load test customer data:</p>

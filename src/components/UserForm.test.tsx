@@ -3,14 +3,22 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import UserForm from '../components/UserForm';
 import { testCustomers } from '../data/testCustomers';
+import * as urlUtils from '../utils/urlUtils';
+
+// Mock the urlUtils module
+jest.mock('../utils/urlUtils');
 
 describe('UserForm', () => {
   const mockOnSubmit = jest.fn();
   const mockOnLoadTestCustomer = jest.fn();
+  const mockIsDevToolsEnabled = urlUtils.isDevToolsEnabled as jest.MockedFunction<typeof urlUtils.isDevToolsEnabled>;
 
   beforeEach(() => {
     mockOnSubmit.mockClear();
     mockOnLoadTestCustomer.mockClear();
+    mockIsDevToolsEnabled.mockClear();
+    // Default to dev tools disabled
+    mockIsDevToolsEnabled.mockReturnValue(false);
   });
 
   test('renders form with all required fields', () => {
@@ -27,6 +35,9 @@ describe('UserForm', () => {
   });
 
   test('displays test customer buttons when test customers are provided', () => {
+    // Enable dev tools for this test
+    mockIsDevToolsEnabled.mockReturnValue(true);
+    
     render(
       <UserForm 
         onSubmit={mockOnSubmit} 
@@ -41,6 +52,9 @@ describe('UserForm', () => {
   });
 
   test('loads test customer data when test customer button is clicked', () => {
+    // Enable dev tools for this test
+    mockIsDevToolsEnabled.mockReturnValue(true);
+    
     render(
       <UserForm 
         onSubmit={mockOnSubmit} 
@@ -108,5 +122,55 @@ describe('UserForm', () => {
     
     // Error should be cleared
     expect(screen.queryByText('First name is required')).not.toBeInTheDocument();
+  });
+
+  test('hides test customer section when dev tools is disabled', () => {
+    // Dev tools is disabled by default in beforeEach
+    mockIsDevToolsEnabled.mockReturnValue(false);
+    
+    render(
+      <UserForm 
+        onSubmit={mockOnSubmit} 
+        onLoadTestCustomer={mockOnLoadTestCustomer}
+        testCustomers={testCustomers} 
+      />
+    );
+    
+    expect(screen.queryByText('Quick Test')).not.toBeInTheDocument();
+    expect(screen.queryByText('Ollie Murphree')).not.toBeInTheDocument();
+    expect(screen.queryByText('Elizabeth Edmundson')).not.toBeInTheDocument();
+    expect(screen.queryByText('Trevor Rieck')).not.toBeInTheDocument();
+  });
+
+  test('shows test customer section when dev tools is enabled', () => {
+    mockIsDevToolsEnabled.mockReturnValue(true);
+    
+    render(
+      <UserForm 
+        onSubmit={mockOnSubmit} 
+        onLoadTestCustomer={mockOnLoadTestCustomer}
+        testCustomers={testCustomers} 
+      />
+    );
+    
+    expect(screen.getByText('Quick Test')).toBeInTheDocument();
+    expect(screen.getByText('Load test customer data:')).toBeInTheDocument();
+    expect(screen.getByText('Ollie Murphree')).toBeInTheDocument();
+    expect(screen.getByText('Elizabeth Edmundson')).toBeInTheDocument();
+    expect(screen.getByText('Trevor Rieck')).toBeInTheDocument();
+  });
+
+  test('hides test customer section when no test customers provided even with dev tools enabled', () => {
+    mockIsDevToolsEnabled.mockReturnValue(true);
+    
+    render(
+      <UserForm 
+        onSubmit={mockOnSubmit} 
+        onLoadTestCustomer={mockOnLoadTestCustomer}
+        testCustomers={[]} 
+      />
+    );
+    
+    expect(screen.queryByText('Quick Test')).not.toBeInTheDocument();
   });
 });
