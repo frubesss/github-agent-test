@@ -1,41 +1,176 @@
 .credit-card {
-  background: white;
-  border: 2px solid #e9ecef;
-  border-radius: 8px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: none;
+  border-radius: 16px;
   padding: 1.5rem;
-  margin-bottom: 1rem;
+  margin-bottom: 1.5rem;
   transition: all 0.3s ease;
   position: relative;
+  color: white;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  min-height: 240px;
+  aspect-ratio: 1.586 / 1; /* Standard credit card ratio */
+  max-width: 400px;
+  overflow: hidden;
+}
+
+/* Credit card background pattern overlay */
+.credit-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(255, 255, 255, 0.05) 0%, transparent 50%),
+    linear-gradient(45deg, transparent 40%, rgba(255, 255, 255, 0.03) 50%, transparent 60%);
+  pointer-events: none;
+}
+
+/* Different gradient themes for variety */
+.credit-card:nth-child(1) {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.credit-card:nth-child(2) {
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+}
+
+.credit-card:nth-child(3) {
+  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+}
+
+.credit-card:nth-child(4) {
+  background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+}
+
+.credit-card:nth-child(5) {
+  background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+}
+
+.credit-card:nth-child(6) {
+  background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+  color: #333;
+}
+
+/* Special styling for light colored cards */
+.credit-card:nth-child(6) .detail-label,
+.credit-card:nth-child(6) .card-description p {
+  color: rgba(51, 51, 51, 0.8);
+  text-shadow: none;
+}
+
+.credit-card:nth-child(6) .detail-row {
+  border-bottom-color: rgba(51, 51, 51, 0.2);
+}
+
+.credit-card:nth-child(6) .card-description {
+  border-top-color: rgba(51, 51, 51, 0.2);
+}
+
+.credit-card:nth-child(6) .detail-row.highlight {
+  background: rgba(51, 51, 51, 0.1);
+  border-color: rgba(51, 51, 51, 0.2);
+}
+
+.credit-card:nth-child(6) .checkmark {
+  background: rgba(51, 51, 51, 0.1);
+  border-color: rgba(51, 51, 51, 0.4);
+}
+
+.credit-card:nth-child(6) .card-selector:hover .checkmark {
+  border-color: rgba(51, 51, 51, 0.7);
+  background: rgba(51, 51, 51, 0.2);
+}
+
+.credit-card:nth-child(6) .card-selector input:checked ~ .checkmark {
+  background: rgba(51, 51, 51, 0.8);
+  border-color: rgba(51, 51, 51, 1);
+}
+
+.credit-card:nth-child(6) .checkmark:after {
+  border-color: white;
 }
 
 .credit-card:hover {
-  border-color: #007bff;
-  box-shadow: 0 4px 12px rgba(0, 123, 255, 0.15);
+  transform: translateY(-8px) rotateX(5deg);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25);
 }
 
 .credit-card.selected {
-  border-color: #28a745;
-  background: #f8fff9;
-  box-shadow: 0 4px 12px rgba(40, 167, 69, 0.15);
+  transform: translateY(-4px);
+  box-shadow: 
+    0 12px 30px rgba(0, 0, 0, 0.2),
+    0 0 0 3px rgba(255, 255, 255, 0.4),
+    inset 0 0 0 2px rgba(255, 255, 255, 0.2);
+}
+
+.credit-card.selected::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  pointer-events: none;
 }
 
 .card-header {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1rem;
+  align-items: flex-start;
+  margin-bottom: 1.5rem;
+  position: relative;
+  z-index: 2;
+}
+
+/* Add a decorative chip element */
+.card-header::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: -0.5rem;
+  width: 40px;
+  height: 30px;
+  background: linear-gradient(45deg, #ffd700, #ffed4e);
+  border-radius: 6px;
+  box-shadow: 
+    inset 0 2px 4px rgba(0, 0, 0, 0.2),
+    0 2px 4px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+/* Add chip pattern */
+.card-header::after {
+  content: '';
+  position: absolute;
+  left: 8px;
+  top: -0.3rem;
+  width: 24px;
+  height: 18px;
+  background: 
+    linear-gradient(90deg, transparent 40%, rgba(0, 0, 0, 0.1) 45%, rgba(0, 0, 0, 0.1) 55%, transparent 60%),
+    linear-gradient(0deg, transparent 40%, rgba(0, 0, 0, 0.1) 45%, rgba(0, 0, 0, 0.1) 55%, transparent 60%);
 }
 
 .card-name {
-  color: #333;
+  color: inherit;
   margin: 0;
-  font-size: 1.5rem;
-  font-weight: 600;
+  font-size: 1.4rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  margin-top: 0.5rem;
 }
 
 .card-selector {
   position: relative;
   cursor: pointer;
+  z-index: 3;
 }
 
 .card-selector input {
@@ -49,33 +184,35 @@
 .checkmark {
   position: relative;
   display: inline-block;
-  height: 25px;
-  width: 25px;
-  background-color: #fff;
-  border: 2px solid #ddd;
-  border-radius: 4px;
+  height: 28px;
+  width: 28px;
+  background: rgba(255, 255, 255, 0.2);
+  border: 2px solid rgba(255, 255, 255, 0.6);
+  border-radius: 6px;
   transition: all 0.2s;
+  backdrop-filter: blur(10px);
 }
 
 .card-selector:hover .checkmark {
-  border-color: #007bff;
+  border-color: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.3);
 }
 
 .card-selector input:checked ~ .checkmark {
-  background-color: #28a745;
-  border-color: #28a745;
+  background: rgba(255, 255, 255, 0.9);
+  border-color: rgba(255, 255, 255, 1);
 }
 
 .checkmark:after {
   content: "";
   position: absolute;
   display: none;
-  left: 7px;
-  top: 3px;
+  left: 8px;
+  top: 4px;
   width: 6px;
   height: 12px;
-  border: solid white;
-  border-width: 0 2px 2px 0;
+  border: solid #333;
+  border-width: 0 3px 3px 0;
   transform: rotate(45deg);
 }
 
@@ -84,15 +221,17 @@
 }
 
 .card-details {
-  margin-bottom: 1rem;
+  margin-bottom: 1.5rem;
+  position: relative;
+  z-index: 2;
 }
 
 .detail-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0.5rem 0;
-  border-bottom: 1px solid #f1f3f4;
+  padding: 0.6rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .detail-row:last-child {
@@ -100,59 +239,84 @@
 }
 
 .detail-row.highlight {
-  background: #f8f9fa;
-  margin: 0 -1rem;
-  padding: 0.75rem 1rem;
-  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.15);
+  margin: 0 -1.5rem;
+  padding: 1rem 1.5rem;
+  border-radius: 12px;
   border: none;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .detail-label {
-  color: #6c757d;
+  color: rgba(255, 255, 255, 0.9);
   font-weight: 500;
+  font-size: 0.9rem;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
 .detail-value {
-  color: #333;
+  color: inherit;
   font-weight: 600;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
 .credit-amount {
-  color: #28a745;
-  font-size: 1.2rem;
+  color: #fff;
+  font-size: 1.3rem;
+  font-weight: 700;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
 }
 
 .card-description {
   margin-top: 1rem;
   padding-top: 1rem;
-  border-top: 1px solid #e9ecef;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  position: relative;
+  z-index: 2;
 }
 
 .card-description p {
-  color: #6c757d;
+  color: rgba(255, 255, 255, 0.8);
   margin: 0;
   line-height: 1.5;
   font-size: 0.9rem;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
 /* Responsive design */
 @media (max-width: 768px) {
   .credit-card {
-    padding: 1rem;
+    padding: 1.2rem;
+    margin-bottom: 1rem;
   }
   
   .card-name {
-    font-size: 1.3rem;
+    font-size: 1.2rem;
   }
   
   .detail-row {
     flex-direction: column;
     align-items: flex-start;
     gap: 0.25rem;
+    padding: 0.5rem 0;
   }
   
   .detail-row.highlight {
     flex-direction: row;
     align-items: center;
+    margin: 0 -1.2rem;
+    padding: 0.8rem 1.2rem;
+  }
+
+  .card-header::before {
+    width: 35px;
+    height: 25px;
+  }
+
+  .card-header::after {
+    width: 20px;
+    height: 15px;
+    left: 7px;
   }
 }
